@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from src.controllers.expenses import signup, login, promote_user
+from src.controllers.auth import signup, login, promote_user
 from src.routes.expenses import token_required, admin_required
 
 auth_routes = Blueprint('auth_routes', __name__)
