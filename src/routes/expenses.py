@@ -10,7 +10,6 @@ from src.controllers.expenses import (
 
 expense_routes = Blueprint('expenses', __name__, url_prefix='/expenses')
 
-
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -29,12 +28,11 @@ def token_required(f):
         try:
             data = jwt.decode(token, Config.SECRET_KEY, algorithms=['HS256'])
             current_user = db.session.get(User, data['user_id'])
-        except:
+        except Exception:
             return jsonify({'message': 'Token inválido!'}), 401
 
         return f(current_user, *args, **kwargs)
     return decorated
-
 
 def admin_required(f):
     @wraps(f)
@@ -44,8 +42,7 @@ def admin_required(f):
         return f(user, *args, **kwargs)
     return decorated
 
-
-@expense_routes.route('/expenses', methods=['POST'])
+@expense_routes.route('', methods=['POST'])
 @token_required
 def create_route(current_user):
     data = request.get_json()
@@ -56,8 +53,7 @@ def create_route(current_user):
         'amount': expense.amount
     }), 201
 
-
-@expense_routes.route('/expenses', methods=['GET'])
+@expense_routes.route('', methods=['GET'])
 @token_required
 def get_route(current_user):
     filters = request.args.to_dict()
@@ -71,8 +67,7 @@ def get_route(current_user):
     } for e in expenses]
     return jsonify({'expenses': output}), 200
 
-
-@expense_routes.route('/expenses/<int:id>', methods=['PUT'])
+@expense_routes.route('/<int:id>', methods=['PUT'])
 @token_required
 def update_route(current_user, id):
     data = request.get_json()
@@ -91,8 +86,7 @@ def update_route(current_user, id):
         'amount': e.amount
     }), 200
 
-
-@expense_routes.route('/expenses/<int:id>', methods=['DELETE'])
+@expense_routes.route('/<int:id>', methods=['DELETE'])
 @token_required
 def delete_route(current_user, id):
     result = delete_expense(current_user, id)
