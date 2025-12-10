@@ -8,7 +8,7 @@ from src.controllers.expenses import (
     create_expense, get_expenses, update_expense, delete_expense
 )
 
-expense_routes = Blueprint('expense_routes', __name__)
+expense_routes = Blueprint('expenses', __name__, url_prefix='/expenses')
 
 
 def token_required(f):
